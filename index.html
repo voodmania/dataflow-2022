@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+
+		<title>Dataflow, todo es posible si tienes imaginación</title>
+
+		<meta name="description" content="Como adaptar Dataflow a tu problema y no al revés">
+		<meta name="author" content="Alberto Fernandéz Valiente">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/moon.css" id="theme">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background-image="img/carto.png" data-background-size="15%" data-background-position="75% 90%">
+					<h3>Dataflow, todo es posible si tienes imaginación</h2>
+					<h5 class="fragment">Como adaptar el framework a tu problema</h4>
+					<p>
+						<small>Por Alberto Fernández Valiente</small>
+					</p>
+				</section>
+
+        <section>
+          <h2>Sobre mí</h2>
+          <ul>
+            <li>Ingeniero Técnico en Informática de Sistemas por la Universidad de Sevilla</li>
+            <li>Más de 15 años de carrera profesional</li>
+            <li>PSF Contributing member</li>
+            <li>DSF Individual member</li>
+          </ul>
+				</section>
+
+        <section>
+          <h2>¿Qué es Dataflow?</h2>
+				</section>
+
+        <section>
+          <h2>Google Cloud</h2>
+          <p>“Dataflow is a managed service for executing a wide variety of data processing patterns.</p>
+          <p>The Apache Beam SDK is an open source programming model that enables you to develop both batch and streaming pipelines. You create your pipelines with an Apache Beam program and then run them on the Dataflow service.”</p>
+				</section>
+
+        <section>
+          <h3>Supported runtimes</h3>
+          <table>
+            <thead>
+              <th>Apache Beam releases</th>
+              <th>Supported Python versions</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2.39.0 – 2.42.0</td>
+                <td>3.7, 3.8, 3.9</td>
+              </tr>
+              <tr>
+                <td>2.37.0 – <b>2.38.0</b></td>
+                <td>3.6, 3.7, 3.8, 3.9</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Hablemos de Apache Beam</h2>
+        </section>
+
+        <section>
+          <h4>Apache Beam is a unified model for defining both batch and streaming data-parallel processing pipelines.</h4>
+          <ul>
+            <li>
+              <b>Pipeline</b>
+              <small>A pipeline is a user-constructed graph of transformations that defines the desired data processing operations.</small>
+            </li>
+            <li>
+              <b>PCollection</b>
+              <small>A PCollection is a data set or data stream. The data that a pipeline processes is part of a PCollection.</small>
+            </li>
+            <li>
+              <b>PTransform</b>
+              <small>A PTransform (or transform) represents a data processing operation, or a step, in your pipeline. A transform is applied to zero or more PCollection objects, and produces zero or more PCollection objects.</small>
+            </li>
+          </ul>
+				</section>
+
+        <section>
+          <h2>Ejemplo</h2>
+          <img src="img/apache-beam-pipeline.svg" style="background-color: white; padding: 15px;">
+        </section>
+
+        <section>
+          <h3>PCollection</h3>
+          <p style="font-size: 30px;">The <b>PCollection</b> abstraction represents a potentially distributed, multi-element data set. You can think of a <b>PCollection</b> as “pipeline” data; Beam transforms use <b>PCollection</b> objects as inputs and outputs. As such, if you want to work with data in your pipeline, it must be in the form of a <b>PCollection</b>.</p>
+          <p style="font-size: 30px;">After you’ve created your Pipeline, you’ll need to begin by creating at least one <b>PCollection</b> in some form. The <b>PCollection</b> you create serves as the input for the first operation in your pipeline.</p>
+        </section>
+
+        <section>
+          <h2>PTransform</h2>
+          <p>A <b>PTransform</b> represents a data processing operation, or a step, in your pipeline. Every <b>PTransform</b> takes one or more <b>PCollection</b> objects as input, performs a processing function that you provide on the elements of that <b>PCollection</b>, and produces zero or more output <b>PCollection</b> objects.</p>
+        </section>
+
+        <section>
+          <h2>Flex templates</h2>
+        </section>
+  
+        <section>
+          <h3>Creación de pipelines a demanda</h3>
+          <ul>
+            <li>La plantilla se define con un fichero JSON dentro de un Google Cloud Storage.</li>
+            <li>Se puede lanzar un job de Dataflow desde línea de comando o mediante código.</li>
+            <li>Todos los jobs tienen un nombre, que puede estar duplicado.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Launcher y Workers</h3>
+          <p style="font-size: 30px;">Dataflow lanza inicialmente una máquina n1-standard-1 que se encarga de crear el pipeline de Apache Beam que luego será ejecutado.</p>
+          <p style="font-size: 30px;">Una vez se ha creado un pipeline correcto se lanzará la/s máquina/s del tipo que hayamos definido para que se ejecute.</p>
+          <p style="font-size: 30px;">Internamente se instancia un Kubernetes dentro de las máquinas para gestionar la ejecución de las tareas dentro de los sdk-harness, uno por cada núcleo de la máquina.</p>
+          <p style="font-size: 30px;">Los “work attempts” encapsulan las unidades de trabajo a nivel PTransform y se paraleliza asignando uno a cada sdk-harness. Se puede limitar el número de ejecuciones paralelas por cada worker.</p>
+        </section>
+
+        <section>
+          <h3>Show me the code</h3>
+        </section>
+
+        <section>
+          <h3>Conclusiones</h3>
+        </section>
+
+        <section>
+          <h3>Pros</h3>
+          <ul>
+            <li>Permite ejecutar tareas de duración ilimitada a petición dentro de GCloud</li>
+            <li>Solo se necesita generar una imagen Docker</li>
+            <li>Puedes movilizar muchas máquinas potentes con autoescalado</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Cons</h3>
+          <ul>
+            <li>Máximo 100 jobs en paralelo</li>
+            <li>Tarda 7-10 minutos en arrancar</li>
+            <li>Hay que pensar como Apache Beam</li>
+            <li>Complejo de depurar y optimizar</li>
+            <li>Peor rendimiento</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>¡Gracias !</h2>
+        </section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			Reveal.initialize({
+				controls: false,
+				progress: true,
+				history: true,
+        center: true,
+        pdfSeparateFragments: false,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+			});
+		</script>
+	</body>
+</html>
